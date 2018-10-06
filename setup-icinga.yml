@@ -1,0 +1,62 @@
+- name: Setup Icinga2 IDO database
+  hosts: all
+  tags: postgres
+  roles:
+    - role: geerlingguy.postgresql
+
+- name:  Setup Icinga2
+  hosts: all
+  roles:
+    - role: VerosK.icinga2
+      tags: icinga2
+    - role: VerosK.icinga2-ido-pgsql
+      tags: icinga2-ido
+##    - role: VerosK.icinga2-pnp4nagios
+##      tags: pnp4nagios
+#    - role: VerosK.postfix
+#      tags: postfix
+
+- name: Setup Icinga2 web
+  hosts: all
+  tags: web
+  pre_tasks:
+    - yum:
+        name:
+          - centos-release-scl
+          - scl-utils
+
+    - name: Enable SElinux
+      selinux:
+        policy: targeted
+        state: permissive
+
+  roles:
+    - role: VerosK.acme-sh
+    - role: VerosK.nginx
+      tags: nginx
+    - role: geerlingguy.php
+    - role: geerlingguy.redis
+      tags: redis
+    - role: VerosK.icingaweb2
+      tags: icingaweb2
+
+
+- name: Setup Icinga2 web auth
+  hosts: all
+  tags: cleanup
+  tasks:
+
+    - Name: Enable SElinux
+      selinux:
+        policy: targeted
+        state: permissive
+
+    - name: Enable SElinux policies
+      seboolean:
+        name: '{{ item }}'
+        state: yes
+        persistent: yes
+      with_items:
+         - icinga2_can_connect_all
+         - httpd_can_network_connect
+         - httpd_can_network_connect_db

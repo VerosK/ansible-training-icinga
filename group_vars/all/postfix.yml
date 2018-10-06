@@ -1,0 +1,4 @@
+
+postfix_extra_maps: []
+
+postfix_hostname: '{{ inventory_hostname }}'

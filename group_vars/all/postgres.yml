@@ -1,0 +1,28 @@
+
+postgresql_locales:
+  - 'en_US.UTF-8'
+  - 'cs_CZ.UTF-8'
+
+postgresql_databases:
+   - name: '{{ icinga2_ido_pg_db }}'
+     encoding: 'UTF-8'
+     state: 'present'
+
+   - name: '{{ icingaweb2_pg_db }}'
+     encoding: 'UTF-8'
+     state: 'present'
+
+# Users to ensure exist.
+postgresql_users:
+   - name: '{{ icinga2_ido_pg_user }}'
+     password: '{{ icinga2_ido_pg_password }}'
+     priv: 'ALL'
+     db: '{{ icinga2_ido_pg_db }}'
+     state: 'present'
+
+   - name: '{{ icingaweb2_pg_user }}'
+     password: '{{ icingaweb2_pg_password }}'
+     priv: 'ALL'
+     db: '{{ icingaweb2_pg_db }}'
+     state: 'present'
+

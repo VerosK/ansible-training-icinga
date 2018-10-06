@@ -1,0 +1,5 @@
+icinga2_apiusers:
+  icingaadmin:
+      password: 'please-dont-use-this-password'
+      permissions:
+            - "*"

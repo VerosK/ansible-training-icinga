@@ -1,0 +1,16 @@
+
+icinga2_ido_with_postgres: false
+icinga2_ido_pg_host: localhost
+icinga2_ido_pg_db: icinga2_ido
+icinga2_ido_pg_user: icinga2_ido
+icinga2_ido_pg_password: AoCeikei1ein
+
+icingaweb2_pg_create_db_user: false
+icingaweb2_pg_create_database: false
+icingaweb2_pg_db: icingaweb2
+icingaweb2_pg_user: icingaweb2
+icingaweb2_pg_host: localhost
+icingaweb2_pg_password: AoCeikei1ein
+
+icinga2_ido_pgsql_extra_config: |
+    enable_ha = 0

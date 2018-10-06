@@ -1,0 +1,79 @@
+nginx_sites:
+  - '{{ icinga_website }}'
+
+icinga_website:
+    name: '{{ ansible_fqdn }}'
+    is_default: true
+    with_ssl: false
+    request_acme_cert: false
+    root_config: '{{ icingaweb2_nginx_root_config }}'
+
+    http_basic_auth:
+        icingaadmin: '$1$changeme$Gc5uJM96SM5XUZNUcieKS/'
+        # icingaadmin: changeme
+
+icingaweb2_nginx_root_config: |
+  # icingaweb2 php
+  location ~ ^/icingaweb2/index\.php(.*)$ {
+      fastcgi_pass 127.0.0.1:9000;
+      fastcgi_index index.php;
+      include fastcgi_params;
+      fastcgi_param SCRIPT_FILENAME /usr/share/icingaweb2/public/index.php;
+      fastcgi_param ICINGAWEB_CONFIGDIR /etc/icingaweb2;
+      fastcgi_param REMOTE_USER $remote_user;
+  }
+  location ~ ^/icingaweb2(.+)? {
+      alias /usr/share/icingaweb2/public;
+      index index.php;
+      try_files $1 $uri $uri/ /icingaweb2/index.php$is_args$args;
+  }
+  # icinga classic static files
+  location /icinga/ {
+      alias /usr/share/icinga/;
+      index index.html;
+  }
+  # Icinga classic CGI files
+  location ~ ^/icinga/cgi-bin/(.*)\.cgi$ {
+      root /usr/lib64/cgi-bin/icinga;
+      include /etc/nginx/uwsgi_params;
+
+      uwsgi_pass  unix:/run/icinga-classicui/uwsgi.socket;
+      uwsgi_param SCRIPT_NAME $1.cgi;
+      uwsgi_param REMOTE_USER $remote_user;
+      uwsgi_modifier1 9;
+  }
+
+  # PNP4Nagios Configuration
+  location /pnp4nagios/ {
+        alias /usr/share/nagios/html/pnp4nagios/;
+        index index.php;
+        try_files $uri $uri/ @pnp4nagios;
+  }
+
+  location @pnp4nagios {
+      if ( $uri !~ /pnp4nagios/index.php(.*)) {
+          rewrite ^/pnp4nagios/(.*)$ /pnp4nagios/index.php/$1;
+          break;
+      }
+
+      fastcgi_pass 127.0.0.1:9000;
+      fastcgi_index index.php;
+      include /etc/nginx/fastcgi_params;
+      # this splits out the trailing path
+      # eg index.php?host -> $fastcgi_path_info == 'host'
+      fastcgi_split_path_info ^(.+\.php)(.*)$;
+      fastcgi_param PATH_INFO $fastcgi_path_info;
+      fastcgi_param SCRIPT_FILENAME //usr/share/nagios/html/pnp4nagios/index.php;
+  }
+
+  # redirect root to Icingaweb2
+  location ~ ^/$ {
+       return 302 /icingaweb2/;
+  }
+  # Disable access otherwise
+  location / {
+      root /var/www/;
+      deny all;
+  }
+
+nginx_firewalld_enable: false

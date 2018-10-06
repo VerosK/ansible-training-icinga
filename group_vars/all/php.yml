@@ -1,0 +1,37 @@
+php_webserver_daemon: "nginx"
+
+php_opcache_enable: false
+
+php_packages:
+  - "centos-release-scl"  # SCL packages
+  - rh-php71-php
+  - rh-php71-php-fpm
+  - rh-php71-php-cli
+  - rh-php71-php-gd
+  - rh-php71-php-ldap
+  - rh-php71-php-mbstring
+  - rh-php71-php-opcache
+  - rh-php71-php-pdo
+  - rh-php71-php-pear
+  - rh-php71-php-pecl-apcu
+  - rh-php71-php-xml
+  - rh-php71-php-pgsql
+  - sclo-php71-php-pecl-redis
+
+#php_packages_extra:
+#  - rh-php71-pecl-redis
+#  - rh-php71-pgsql
+
+php_install_from_source: false
+# php_enablerepo:
+
+php_enable_php_fpm: true
+php_fpm_create_default_pool: false
+php_fpm_conf_path: /etc/opt/rh/rh-php71/php-fpm.conf
+php_fpm_pool_conf_dir: /etc/opt/rh/rh-php71/php-fpm.d/
+php_fpm_pool_conf_path: '{{ php_fpm_pool_conf_dir }}/www.conf'
+php_fpm_daemon: rh-php71-php-fpm
+
+php_fpm_pm_start_servers: 1
+php_fpm_pm_min_spare_servers: 1
+php_fpm_pm_max_spare_servers: 1

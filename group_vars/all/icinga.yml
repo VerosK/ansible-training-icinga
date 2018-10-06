@@ -1,0 +1,58 @@
+icinga2_ping_fix_capabilities: False
+
+icinga2_basic_plugins:
+  - nagios-plugins-time
+  - nagios-plugins-load
+  - nagios-plugins-disk
+  - nagios-plugins-ping
+  - nagios-plugins-users
+  - nagios-plugins-ntp
+  - nagios-plugins-tcp
+  - nagios-plugins-http
+  - nagios-plugins-procs
+  - nagios-plugins-ssh
+  - nagios-plugins-check-updates
+  - nagios-plugins-swap
+  - nagios-plugins-snmp
+  - nagios-plugins-nrpe
+  - nagios-plugins-uptime
+  - nagios-plugins-by_ssh
+  - nagios-plugins-pgsql
+
+icinga2_plugins_packages:
+    '{{ icinga2_basic_plugins + icinga2_additional_plugins }}'
+
+icinga2_additional_plugins: []
+
+icinga2_features:
+    checker: on
+    command: on
+    mainlog: on
+    notification: on
+    statusdata: on
+    compatlog: off
+    perfdata: on
+
+
+icinga2_conf_global: |
+   # ansible managed
+   include "constants.conf"
+   include "zones.conf"
+   include "{{ icinga2_apiusers_conf }}"
+   include <itl>
+   include <plugins>
+   include "features-enabled/*.conf"
+   # prepared for satellite setup.
+   include_recursive "conf.d"
+   # note: "zones.d" are included automagically
+
+
+
+icinga2_apiusers:
+  icingaweb2:
+      password: 'AeL5aidaz4shugha'
+      permissions:
+          - status/query
+          - actions/*
+          - objects/modify/*
+          - objects/query/*
