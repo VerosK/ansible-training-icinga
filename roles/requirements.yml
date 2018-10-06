@@ -13,7 +13,7 @@
 - role: VerosK.icinga2
   version: 0.1.2
 - role: VerosK.icingaweb2
-#  version: 0.1.2
+  version: 0.2.1
 
 - role: VerosK.icinga2-ido-pgsql
   version: master
