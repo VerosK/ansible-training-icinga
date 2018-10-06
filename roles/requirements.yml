@@ -7,8 +7,8 @@
   version: 1.3.1
 - role: geerlingguy.php
   version: 3.5.0
-- role: VerosK.acme-sh
-- role: VerosK.nginx
+- role: geerlingguy.redis
+  version: 1.6.0
 
 - role: VerosK.icinga2
   version: 0.1.2
@@ -17,3 +17,4 @@
 
 - role: VerosK.icinga2-ido-pgsql
   version: master
+
