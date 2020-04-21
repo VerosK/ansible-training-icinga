@@ -16,7 +16,7 @@ php_packages:
   - rh-php71-php-pecl-apcu
   - rh-php71-php-xml
   - rh-php71-php-pgsql
-  - sclo-php71-php-pecl-redis
+#  - sclo-php71-php-pecl-redis
 
 #php_packages_extra:
 #  - rh-php71-pecl-redis
